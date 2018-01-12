@@ -240,10 +240,13 @@ class ApplyForm extends Component {
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="操作系统"
-          extra="如:win-xp,win7-32位/64位,win8-32位/64位,mac,ubuntu-32位/64位"
-        >
-          <Editor editorState={this.state.editorState} onChange={this.onChange} />
+          label="问题描述"
+        > 
+          {getFieldDecorator('description', {
+            rules: [{ required: true, message: '请描述详细情况' }],
+          })(
+            <Editor editorState={this.state.editorState} onChange={this.onChange} />
+          )}
         </FormItem>
         <FormItem {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">Submit</Button>
