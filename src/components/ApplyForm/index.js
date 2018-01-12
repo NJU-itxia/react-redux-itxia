@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Editor, EditorState} from 'draft-js';
 import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Radio } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -74,7 +75,10 @@ class ApplyForm extends Component {
   state = {
     confirmDirty: false,
     autoCompleteResult: [],
+    editorState: EditorState.createEmpty()
   };
+
+  onChange = (editorState) => this.setState({editorState});
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -234,9 +238,17 @@ class ApplyForm extends Component {
             <Cascader options={osSets} showSearch/>
           )}
         </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="操作系统"
+          extra="如:win-xp,win7-32位/64位,win8-32位/64位,mac,ubuntu-32位/64位"
+        >
+          <Editor editorState={this.state.editorState} onChange={this.onChange} />
+        </FormItem>
         <FormItem {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">Submit</Button>
         </FormItem>
+        
       </Form>
     );
   }
