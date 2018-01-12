@@ -5,6 +5,7 @@ import { combineReducers } from "redux";
 import { syncHistoryWithStore } from "react-router-redux";
 
 import App from './pages/App'
+import UserApp from "./pages/UserApp";
 import store from "./Store";
 
 const createElement = (Component, props) => {
@@ -21,6 +22,12 @@ const getHomePage = (nextState, callback) => {
 	}, 'home');
 };
 
+const getNowPage = (nextState, callback) => {
+	require.ensure([], function(require) {
+		callback(null, require('./pages/Now').default);
+	}, 'home');
+};
+
 const getNotFoundPage = (nextState, callback) => {
 	require.ensure([], function(require) {
 		callback(null, require('./pages/NotFound').default);
@@ -31,11 +38,14 @@ const history = syncHistoryWithStore(browserHistory, store);
 
 const Routes = () => (
   <Router history={history} createElement={createElement}>
+		<Route path="/form" component={UserApp}>
+			<Route path="now" getComponent={getNowPage}/>
+		</Route>
 		<Route path="/" component={App}>
 			<IndexRoute getComponent={getHomePage}/>
 			<Route path="home" getComponent={getHomePage}/>
-			<Route path="*" getComponent={getNotFoundPage}/>
 		</Route>
+		<Route path="/*" getComponent={getNotFoundPage}/>
   </Router>
 )
 

@@ -1,34 +1,76 @@
 import React, { Component } from "react";
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Radio } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const AutoCompleteOption = AutoComplete.Option;
+const RadioGroup = Radio.Group;
 
-const residences = [{
-  value: 'zhejiang',
-  label: 'Zhejiang',
+const osSets = [{
+  value: 'Windws',
+  label: 'Windws',
   children: [{
-    value: 'hangzhou',
-    label: 'Hangzhou',
+    value: 'xp',
+    label: 'xp',
     children: [{
-      value: 'xihu',
-      label: 'West Lake',
-    }],
+      value: '64位',
+      label: '64位',
+    },
+    {
+      value: '32位',
+      label: '32位',
+    }]
+  },
+  {
+    value: '7',
+    label: '7',
+    children: [{
+      value: '64位',
+      label: '64位',
+    },
+    {
+      value: '32位',
+      label: '32位',
+    }]
+  },
+  {
+    value: '10',
+    label: '10',
+    children: [{
+      value: '64位',
+      label: '64位',
+    },
+    {
+      value: '32位',
+      label: '32位',
+    }]
   }],
-}, {
-  value: 'jiangsu',
-  label: 'Jiangsu',
+},
+{
+  value: 'MacOS',
+  label: 'MacOS',
   children: [{
-    value: 'nanjing',
-    label: 'Nanjing',
-    children: [{
-      value: 'zhonghuamen',
-      label: 'Zhong Hua Men',
-    }],
-  }],
+    value: '64位',
+    label: '64位',
+  },
+  {
+    value: '32位',
+    label: '32位',
+  }]
+},
+{
+  value: 'Linux',
+  label: 'Linux',
+  children: [{
+    value: '64位',
+    label: '64位',
+  },
+  {
+    value: '32位',
+    label: '32位',
+  }]
 }];
 
-class RegistrationForm extends Component {
+class ApplyForm extends Component {
   state = {
     confirmDirty: false,
     autoCompleteResult: [],
@@ -41,6 +83,7 @@ class RegistrationForm extends Component {
         console.log('Received values of form: ', values);
       }
     });
+    console.log(this.props.form);
   }
 
   handleConfirmBlur = (e) => {
@@ -82,11 +125,11 @@ class RegistrationForm extends Component {
     const formItemLayout = {
       labelCol: {
         xs: { span: 15 },
-        sm: { span: 8 },
+        sm: { span: 6 },
       },
       wrapperCol: {
         xs: { span: 15 },
-        sm: { span: 8 },
+        sm: { span: 12 },
       },
     };
     const tailFormItemLayout = {
@@ -97,7 +140,7 @@ class RegistrationForm extends Component {
         },
         sm: {
           span: 16,
-          offset: 8,
+          offset: 10,
         },
       },
     };
@@ -118,6 +161,17 @@ class RegistrationForm extends Component {
       <Form onSubmit={this.handleSubmit}>
         <FormItem
           {...formItemLayout}
+          label="手机"
+        >
+          {getFieldDecorator('phone', {
+            initialValue: '123',
+            rules: [{required: true, message: '请填写你的手机号！'}]
+          })(
+            <Input addonBefore={prefixSelector} style={{ width: '100%' }}/>
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
           label="姓名"
         >
           {getFieldDecorator('name', {
@@ -131,6 +185,7 @@ class RegistrationForm extends Component {
         <FormItem
           {...formItemLayout}
           label="邮箱"
+          extra='通过邮件接收IT侠的最新回复信息'
         >
           {getFieldDecorator('email', {
             rules: [{
@@ -142,122 +197,52 @@ class RegistrationForm extends Component {
             <Input />
           )}
         </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="Password"
-        >
-          {getFieldDecorator('password', {
+        <FormItem {...formItemLayout} label="校区">
+          {getFieldDecorator('campus',{
             rules: [{
-              required: true, message: 'Please input your password!',
-            }, {
-              validator: this.checkConfirm,
+              required: true, message: '请选择你的校区!',
             }],
           })(
-            <Input type="password" />
+            <RadioGroup>
+              <Radio value="gulou">鼓楼校区</Radio>
+              <Radio value="xianlin">仙林校区</Radio>
+            </RadioGroup>
           )}
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="Confirm Password"
+          label="电脑型号"
+          extra='电脑型号可以查看发票、说明书标识，在电脑背面或电池下面也有电脑型号标签'
         >
-          {getFieldDecorator('confirm', {
+          {getFieldDecorator('model', {
             rules: [{
-              required: true, message: 'Please confirm your password!',
-            }, {
-              validator: this.checkPassword,
+              required: true, message: '请填写你的电脑型号',
             }],
-          })(
-            <Input type="password" onBlur={this.handleConfirmBlur} />
-          )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label={(
-            <span>
-              Nickname&nbsp;
-              <Tooltip title="What do you want others to call you?">
-                <Icon type="question-circle-o" />
-              </Tooltip>
-            </span>
-          )}
-        >
-          {getFieldDecorator('nickname', {
-            rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],
           })(
             <Input />
           )}
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="Habitual Residence"
+          label="操作系统"
+          extra="如:win-xp,win7-32位/64位,win8-32位/64位,mac,ubuntu-32位/64位"
         >
-          {getFieldDecorator('residence', {
-            initialValue: ['zhejiang', 'hangzhou', 'xihu'],
-            rules: [{ type: 'array', required: true, message: 'Please select your habitual residence!' }],
+          {getFieldDecorator('os', {
+            initialValue: ['Windows', '10', '64位'],
+            rules: [{ type: 'array', required: true, message: '请输入你的系统版本' }],
           })(
-            <Cascader options={residences} />
-          )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="Phone Number"
-        >
-          {getFieldDecorator('phone', {
-            rules: [{ required: true, message: 'Please input your phone number!' }],
-          })(
-            <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
-          )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="Website"
-        >
-          {getFieldDecorator('website', {
-            rules: [{ required: true, message: 'Please input website!' }],
-          })(
-            <AutoComplete
-              dataSource={websiteOptions}
-              onChange={this.handleWebsiteChange}
-              placeholder="website"
-            >
-              <Input />
-            </AutoComplete>
-          )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="Captcha"
-          extra="We must make sure that your are a human."
-        >
-          <Row gutter={8}>
-            <Col span={12}>
-              {getFieldDecorator('captcha', {
-                rules: [{ required: true, message: 'Please input the captcha you got!' }],
-              })(
-                <Input />
-              )}
-            </Col>
-            <Col span={12}>
-              <Button>Get captcha</Button>
-            </Col>
-          </Row>
-        </FormItem>
-        <FormItem {...tailFormItemLayout}>
-          {getFieldDecorator('agreement', {
-            valuePropName: 'checked',
-          })(
-            <Checkbox>I have read the <a href="">agreement</a></Checkbox>
+            <Cascader options={osSets} showSearch/>
           )}
         </FormItem>
         <FormItem {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">Register</Button>
+          <Button type="primary" htmlType="submit">Submit</Button>
         </FormItem>
       </Form>
     );
   }
 }
 
-const WrappedRegistrationForm = Form.create()(RegistrationForm);
+const WrappedApplyForm = Form.create()(ApplyForm);
 
-export {WrappedRegistrationForm};
+export {WrappedApplyForm};
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { WrappedRegistrationForm } from "../components/ApplyForm";
+import { WrappedApplyForm } from "../components/ApplyForm";
 import { Layout, Menu, Row, Col } from 'antd';
 const {Content} = Layout;
 
@@ -10,12 +10,11 @@ const Home = ({greetings}) => {
         <div style={{ background: '#fff', padding: 24, minHeight: 1960 }}>
         <Row>
           <Col>
-            <WrappedRegistrationForm/>
+            <WrappedApplyForm/>
           </Col>
         </Row>    
         </div>
     </Content>
-    
   );
 };
 

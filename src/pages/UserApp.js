@@ -4,13 +4,13 @@ import { Layout } from 'antd';
 
 
 
-const App = ({children}) => {
+const UserApp = ({children}) => {
   return (
     <Layout>
-      <TopHeader navList={[{url:"/form/now", text: "预约维修"}, {url:"/form/history", text: "后台管理"}]}/>
+      <TopHeader navList={[{url:"/form/now", text: "当前请求"}, {url:"/form/history", text: "历史请求"}]}/>
       {children}
     </Layout>
   )
 }
 
-export default App;
+export default UserApp;
